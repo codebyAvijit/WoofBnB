@@ -3,10 +3,12 @@ const cors = require("cors");
 const helmet = require("helmet");
 const AppError = require("./utils/AppError");
 const HTTP_STATUS = require("./constants/httpStatus");
+const authRoutes = require("./modules/auth/auth.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
 const app = express();
 
+app.use(express.json());
 app.use(helmet());
 
 app.use(
@@ -16,7 +18,7 @@ app.use(
   }),
 );
 
-app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({
