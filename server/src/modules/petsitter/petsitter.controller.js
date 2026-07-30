@@ -32,7 +32,22 @@ const getAllPetSitters = asyncHandler(async (req, res) => {
     );
 });
 
+const getNearbyPetSitters = asyncHandler(async (req, res) => {
+  const petSitters = await petSitterService.getNearbyPetSitters(req.query);
+
+  return res
+    .status(HTTP_STATUS.OK)
+    .json(
+      new ApiResponse(
+        HTTP_STATUS.OK,
+        "Nearby pet sitters fetched successfully",
+        petSitters,
+      ),
+    );
+});
+
 module.exports = {
   registerPetSitter,
   getAllPetSitters,
+  getNearbyPetSitters,
 };

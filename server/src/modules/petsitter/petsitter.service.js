@@ -27,7 +27,18 @@ const getAllPetSitters = async () => {
   return petSitters.map(toPetSitterDto);
 };
 
+const getNearbyPetSitters = async ({ lat, lng, radius }) => {
+  const petSitters = await petSitterRepository.findNearbyPetSitters(
+    lng,
+    lat,
+    radius,
+  );
+
+  return petSitters.map(toPetSitterDto);
+};
+
 module.exports = {
   registerPetSitter,
   getAllPetSitters,
+  getNearbyPetSitters,
 };
