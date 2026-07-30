@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const AppError = require("./utils/AppError");
 const HTTP_STATUS = require("./constants/httpStatus");
 const authRoutes = require("./modules/auth/auth.routes");
+const petSitterRoutes = require("./modules/petsitter/petsitter.routes");
 const errorMiddleware = require("./middlewares/error.middleware");
 
 const app = express();
@@ -19,6 +20,8 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+
+app.use("/api/petsitters", petSitterRoutes);
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({
