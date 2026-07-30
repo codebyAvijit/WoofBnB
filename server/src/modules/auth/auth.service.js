@@ -34,6 +34,17 @@ const login = async ({ email, password }) => {
   };
 };
 
+const getCurrentUser = async (userId) => {
+  const user = await authRepository.findUserById(userId);
+
+  if (!user) {
+    throw new AppError("User not found", HTTP_STATUS.NOT_FOUND);
+  }
+
+  return toUserDto(user);
+};
+
 module.exports = {
   login,
+  getCurrentUser,
 };
