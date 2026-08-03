@@ -7,7 +7,10 @@ const createPetSitterSchema = z.object({
 
   email: z.string().trim().email(),
 
-  phone: z.string().trim().min(10).max(15),
+  phone: z
+    .string()
+    .trim()
+    .regex(/^\+?[1-9]\d{9,14}$/, "Enter a valid phone number"),
 
   bio: z.string().trim().min(20).max(1000),
 
