@@ -1,8 +1,8 @@
-import api from "./axios";
+import { api } from ".";
 
-export const registerPetSitter = (data) => api.post("/petsitters", data);
+export const getPetSitters = () => api.get("/petsitters");
 
-export const getAllPetSitters = () => api.get("/petsitters");
+export const createPetSitter = (payload) => api.post("/petsitters", payload);
 
 export const getNearbyPetSitters = (params) =>
   api.get("/petsitters/nearby", {

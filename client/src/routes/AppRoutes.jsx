@@ -8,7 +8,7 @@ import NotFound from "../pages/NotFound";
 import Unauthorized from "../pages/Unauthorized";
 
 import Login from "../features/auth/pages/Login";
-
+import PetSitters from "../features/petsitter/pages/PetSitters";
 import ProtectedRoute from "./ProtectedRoute";
 
 function AppRoutes() {
@@ -32,6 +32,17 @@ function AppRoutes() {
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         <Route path="*" element={<NotFound />} />
+        <Route
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/" element={<Dashboard />} />
+
+          <Route path="/petsitters" element={<PetSitters />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

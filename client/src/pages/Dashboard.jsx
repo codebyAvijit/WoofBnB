@@ -1,33 +1,42 @@
-import Button from "../components/common/Button";
 import Card from "../components/common/Card";
 
 import { useAuth } from "../context/AuthContext";
-import useLogout from "../features/auth/hooks/useLogout";
 
 function Dashboard() {
   const { user } = useAuth();
 
-  const logout = useLogout();
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
-      <Card className="w-full max-w-xl space-y-6 text-center">
-        <h1 className="text-4xl font-bold text-slate-800">
-          Welcome to WoofBnB
+    <div className="space-y-6">
+      <Card>
+        <h1 className="text-3xl font-bold">
+          Welcome back,
+          <span className="text-blue-600"> {user?.name}</span>
         </h1>
 
-        <div className="space-y-2">
-          <p className="text-lg font-medium text-slate-700">{user?.name}</p>
-
-          <p className="text-slate-500">{user?.email}</p>
-
-          <p className="text-sm text-slate-400">Role: {user?.role}</p>
-        </div>
-
-        <div className="flex justify-center">
-          <Button onClick={logout}>Logout</Button>
-        </div>
+        <p className="mt-2 text-slate-500">
+          Manage your pet sitters from the dashboard.
+        </p>
       </Card>
+
+      <div className="grid gap-6 md:grid-cols-3">
+        <Card>
+          <h2 className="text-xl font-semibold">Total Pet Sitters</h2>
+
+          <p className="mt-4 text-5xl font-bold">--</p>
+        </Card>
+
+        <Card>
+          <h2 className="text-xl font-semibold">Nearby Searches</h2>
+
+          <p className="mt-4 text-5xl font-bold">--</p>
+        </Card>
+
+        <Card>
+          <h2 className="text-xl font-semibold">Active Users</h2>
+
+          <p className="mt-4 text-5xl font-bold">--</p>
+        </Card>
+      </div>
     </div>
   );
 }
