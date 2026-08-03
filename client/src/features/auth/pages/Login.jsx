@@ -1,14 +1,20 @@
 import { Navigate } from "react-router-dom";
 
 import Card from "../../../components/common/Card";
-
 import LoginForm from "../components/LoginForm";
 
-import { storage } from "../../../utils/storage";
+import { useAuth } from "../../../context/AuthContext";
+import Loader from "../../../components/common/Loader";
 
 function Login() {
-  if (storage.isAuthenticated()) {
-    return <Navigate to="/" replace />;
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (user) {
+    return <Navigate to="/dashboard/petsitters" replace />;
   }
 
   return (

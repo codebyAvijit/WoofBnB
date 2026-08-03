@@ -9,11 +9,11 @@ function Sidebar() {
   return (
     <aside className="w-64 border-r bg-white p-5">
       <nav className="space-y-2">
-        <NavLink to="/" className={linkClass}>
+        <NavLink to="/dashboard" end className={linkClass}>
           Dashboard
         </NavLink>
 
-        <NavLink to="/petsitters" className={linkClass}>
+        <NavLink to="/dashboard/petsitters" className={linkClass}>
           Pet Sitters
         </NavLink>
       </nav>

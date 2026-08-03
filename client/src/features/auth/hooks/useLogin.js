@@ -25,7 +25,7 @@ function useLogin() {
 
       toast.success(data.message);
 
-      navigate("/", {
+      navigate("/dashboard", {
         replace: true,
       });
     },
