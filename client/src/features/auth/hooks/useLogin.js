@@ -9,6 +9,7 @@ import { login as loginApi } from "../../../api/auth.api";
 import { storage } from "../../../utils/storage";
 
 import { useAuth } from "../../../context/AuthContext";
+import { ROUTES } from "../../../constants/routes";
 
 function useLogin() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function useLogin() {
 
       toast.success(data.message);
 
-      navigate("/dashboard", {
+      navigate(ROUTES.ADMIN.DASHBOARD, {
         replace: true,
       });
     },

@@ -1,26 +1,16 @@
-import { Link } from "react-router-dom";
-
-import Button from "../components/common/Button";
+import HeroSection from "../components/home/HeroSection";
+import SearchSection from "../components/home/SearchSection";
+import NearbySection from "../components/home/NearbySection";
 
 function Home() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-6">
-      <h1 className="mb-4 text-center text-5xl font-bold">WoofBnB</h1>
+    <>
+      <HeroSection />
 
-      <p className="mb-10 max-w-xl text-center text-slate-600">
-        Find trusted pet sitters near you or become a pet sitter.
-      </p>
+      <SearchSection />
 
-      <div className="flex flex-wrap justify-center gap-4">
-        <Link to="/register">
-          <Button>Become a Pet Sitter</Button>
-        </Link>
-
-        <Link to="/login">
-          <Button variant="secondary">Admin Login</Button>
-        </Link>
-      </div>
-    </div>
+      <NearbySection />
+    </>
   );
 }
 

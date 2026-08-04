@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Card from "../../../components/common/Card";
 
 import PetSitterForm from "../components/PetSitterForm";
+import { ROUTES } from "../../../constants/routes";
 
 function RegisterPetSitter() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ function RegisterPetSitter() {
 
         <PetSitterForm
           onSuccess={() => {
-            navigate("/");
+            navigate(ROUTES.PUBLIC.HOME);
           }}
         />
       </Card>

@@ -3,7 +3,7 @@ import Button from "../../common/Button";
 import { useAuth } from "../../../context/AuthContext";
 import useLogout from "../../../features/auth/hooks/useLogout";
 
-function Navbar() {
+function AdminNavbar() {
   const { user } = useAuth();
 
   const logout = useLogout();
@@ -27,4 +27,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default AdminNavbar;

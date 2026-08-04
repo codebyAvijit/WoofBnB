@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { useAuth } from "../../../context/AuthContext";
+import { ROUTES } from "../../../constants/routes";
 
 function useLogout() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function useLogout() {
 
     toast.success("Logged out successfully.");
 
-    navigate("/", {
+    navigate(ROUTES.PUBLIC.HOME, {
       replace: true,
     });
   };
