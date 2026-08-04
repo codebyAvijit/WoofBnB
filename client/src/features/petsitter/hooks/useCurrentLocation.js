@@ -6,7 +6,7 @@ function useCurrentLocation() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { setCoordinates } = useSearch();
+  const { setCoordinates, setSearchParams, radius } = useSearch();
 
   const getCurrentLocation = () => {
     if (loading) return;
@@ -22,6 +22,17 @@ function useCurrentLocation() {
     navigator.geolocation.getCurrentPosition(
       ({ coords: { latitude, longitude } }) => {
         setCoordinates({
+          latitude,
+          longitude,
+        });
+
+        setSearchParams({
+          lat: latitude,
+          lng: longitude,
+          radius,
+        });
+
+        console.log("Current Location:", {
           latitude,
           longitude,
         });

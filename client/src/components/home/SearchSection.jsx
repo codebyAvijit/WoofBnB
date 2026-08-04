@@ -3,22 +3,12 @@ import { useSearch } from "../../features/search/context/SearchContext";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import useCurrentLocation from "../../features/petsitter/hooks/useCurrentLocation";
-
+import useLocationSearch from "../../features/search/hooks/useLocationSearch";
 function SearchSection() {
   const { searchText, setSearchText, radius, coordinates, setSearchParams } =
     useSearch();
-
+  const { searchByLocation } = useLocationSearch();
   const { loading, error, getCurrentLocation } = useCurrentLocation();
-
-  const handleSearch = () => {
-    if (!coordinates) return;
-
-    setSearchParams({
-      lat: coordinates.latitude,
-      lng: coordinates.longitude,
-      radius,
-    });
-  };
 
   return (
     <section className="bg-white py-16">
@@ -42,7 +32,7 @@ function SearchSection() {
               onChange={(e) => setSearchText(e.target.value)}
             />
 
-            <Button size="lg" onClick={handleSearch}>
+            <Button size="lg" onClick={searchByLocation}>
               Search
             </Button>
           </div>
@@ -56,17 +46,6 @@ function SearchSection() {
             >
               📍 Use Current Location
             </Button>
-            {coordinates && (
-              <div className="mt-6 rounded-lg bg-green-50 p-4">
-                <p className="text-sm text-green-700">
-                  Latitude: {coordinates.latitude}
-                </p>
-
-                <p className="text-sm text-green-700">
-                  Longitude: {coordinates.longitude}
-                </p>
-              </div>
-            )}
             {error && (
               <p className="mt-4 text-center text-sm text-red-500">{error}</p>
             )}

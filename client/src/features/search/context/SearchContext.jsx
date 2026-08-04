@@ -5,15 +5,14 @@ export const SearchContext = createContext(null);
 function SearchProvider({ children }) {
   const [searchText, setSearchText] = useState("");
   const [coordinates, setCoordinates] = useState(null);
-  const [radius, setRadius] = useState(5000);
+  const [radius, setRadius] = useState(15000);
   const [searchParams, setSearchParams] = useState(null);
+  const [selectedPetSitter, setSelectedPetSitter] = useState(null);
+  const [nearbyPetSitters, setNearbyPetSitters] = useState([]);
 
   return (
     <SearchContext.Provider
       value={{
-        searchText,
-        setSearchText,
-
         coordinates,
         setCoordinates,
 
@@ -22,6 +21,14 @@ function SearchProvider({ children }) {
 
         searchParams,
         setSearchParams,
+
+        nearbyPetSitters,
+        setNearbyPetSitters,
+
+        selectedPetSitter,
+        setSelectedPetSitter,
+        searchText,
+        setSearchText,
       }}
     >
       {children}

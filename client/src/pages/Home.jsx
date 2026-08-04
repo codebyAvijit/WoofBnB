@@ -1,6 +1,6 @@
 import HeroSection from "../components/home/HeroSection";
 import SearchSection from "../components/home/SearchSection";
-import NearbySection from "../components/home/NearbySection";
+import NearbyExplorer from "../components/home/NearbyExplorer";
 
 function Home() {
   return (
@@ -9,7 +9,7 @@ function Home() {
 
       <SearchSection />
 
-      <NearbySection />
+      <NearbyExplorer />
     </>
   );
 }

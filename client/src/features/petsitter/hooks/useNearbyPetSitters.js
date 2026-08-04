@@ -1,19 +1,35 @@
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { getNearbyPetSitters } from "../../../api/petsitter.api";
+import { useSearch } from "../../search/context/SearchContext";
 
 function useNearbyPetSitters(searchParams) {
-  return useQuery({
+  const { setNearbyPetSitters, setSelectedPetSitter } = useSearch();
+  const query = useQuery({
     queryKey: ["nearby-petsitters", searchParams],
 
     queryFn: async () => {
       const { data } = await getNearbyPetSitters(searchParams);
-
       return data.data;
     },
 
     enabled: Boolean(searchParams),
   });
+
+  useEffect(() => {
+    if (!query.data) {
+      return;
+    }
+
+    setNearbyPetSitters(query.data);
+
+    if (!query.data.length) {
+      setSelectedPetSitter(null);
+    }
+  }, [query.data, setNearbyPetSitters, setSelectedPetSitter]);
+
+  return query;
 }
 
 export default useNearbyPetSitters;

@@ -5,8 +5,8 @@ import PetSitterCard from "../../features/petsitter/components/PetSitterCard";
 import useNearbyPetSitters from "../../features/petsitter/hooks/useNearbyPetSitters";
 import { useSearch } from "../../features/search/context/SearchContext";
 
-function NearbySection() {
-  const { searchParams } = useSearch();
+function NearbyList() {
+  const { searchParams, selectedPetSitter, setSelectedPetSitter } = useSearch();
 
   const {
     data: petSitters = [],
@@ -48,9 +48,27 @@ function NearbySection() {
         )}
 
         {!isLoading && !isError && petSitters.length > 0 && (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="h-[700px] space-y-4 overflow-y-auto pr-2">
             {petSitters.map((petSitter) => (
-              <PetSitterCard key={petSitter.id} petSitter={petSitter} />
+              <div
+                key={petSitter.id}
+                onClick={() => setSelectedPetSitter(petSitter)}
+                className={`
+cursor-pointer
+rounded-xl
+border
+transition-all
+duration-200
+
+${
+  selectedPetSitter?.id === petSitter.id
+    ? "border-blue-600 bg-blue-50 shadow-lg"
+    : "border-slate-200 hover:border-blue-300 hover:shadow-md"
+}
+`}
+              >
+                <PetSitterCard petSitter={petSitter} />
+              </div>
             ))}
           </div>
         )}
@@ -59,4 +77,4 @@ function NearbySection() {
   );
 }
 
-export default NearbySection;
+export default NearbyList;
