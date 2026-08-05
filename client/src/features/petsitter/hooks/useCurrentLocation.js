@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useSearch } from "../../search/context/SearchContext";
 
@@ -8,9 +8,7 @@ function useCurrentLocation() {
 
   const { setCoordinates, setSearchParams, radius } = useSearch();
 
-  const getCurrentLocation = () => {
-    if (loading) return;
-
+  const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
       setError("Geolocation is not supported by this browser.");
       return;
@@ -30,11 +28,6 @@ function useCurrentLocation() {
           lat: latitude,
           lng: longitude,
           radius,
-        });
-
-        console.log("Current Location:", {
-          latitude,
-          longitude,
         });
 
         setLoading(false);
@@ -65,7 +58,7 @@ function useCurrentLocation() {
         maximumAge: 0,
       },
     );
-  };
+  }, [radius, setCoordinates, setSearchParams]);
 
   return {
     loading,

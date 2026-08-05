@@ -44,7 +44,7 @@ function SearchSection() {
               loading={loading}
               onClick={getCurrentLocation}
             >
-              📍 Use Current Location
+              📍 Refresh Current Location
             </Button>
             {error && (
               <p className="mt-4 text-center text-sm text-red-500">{error}</p>
