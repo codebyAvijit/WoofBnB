@@ -5,7 +5,7 @@ import { useSearch } from "../../features/search/context/SearchContext";
 
 import UserMarker from "./UserMarker";
 import PetSitterMarkers from "./PetSitterMarker";
-
+import MapInfoWindow from "./MapInfoWindow";
 const containerStyle = {
   width: "100%",
   height: "100%",
@@ -73,6 +73,7 @@ function MapContainer() {
         <UserMarker />
 
         <PetSitterMarkers />
+        <MapInfoWindow />
       </GoogleMap>
     </div>
   );

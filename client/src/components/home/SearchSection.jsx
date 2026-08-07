@@ -1,9 +1,9 @@
 import { useSearch } from "../../features/search/context/SearchContext";
 
 import Button from "../common/Button";
-import Input from "../common/Input";
 import useCurrentLocation from "../../features/petsitter/hooks/useCurrentLocation";
 import useLocationSearch from "../../features/search/hooks/useLocationSearch";
+import LocationSearchInput from "../map/LocationSearchInput";
 function SearchSection() {
   const { searchText, setSearchText, radius, coordinates, setSearchParams } =
     useSearch();
@@ -26,11 +26,7 @@ function SearchSection() {
           </div>
 
           <div className="mx-auto mt-10 flex max-w-3xl flex-col gap-4 md:flex-row">
-            <Input
-              placeholder="Enter city or locality"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
+            <LocationSearchInput />
 
             <Button size="lg" onClick={searchByLocation}>
               Search
