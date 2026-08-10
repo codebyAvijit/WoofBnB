@@ -1,5 +1,7 @@
+import { useEffect, useMemo, useRef } from "react";
+
 import Loader from "../common/Loader";
-import { useEffect, useRef } from "react";
+
 import PetSitterCard from "../../features/petsitter/components/PetSitterCard";
 
 import useNearbyPetSitters from "../../features/petsitter/hooks/useNearbyPetSitters";
@@ -7,13 +9,16 @@ import { useSearch } from "../../features/search/context/SearchContext";
 
 function NearbyList() {
   const { searchParams, selectedPetSitter, setSelectedPetSitter } = useSearch();
+
   const cardRefs = useRef({});
+
   const {
     data: petSitters = [],
     isLoading,
     isError,
     error,
   } = useNearbyPetSitters(searchParams);
+
   useEffect(() => {
     if (!selectedPetSitter) return;
 
@@ -26,6 +31,21 @@ function NearbyList() {
       });
     }
   }, [selectedPetSitter]);
+
+  const sortedPetSitters = useMemo(() => {
+    if (!selectedPetSitter) return petSitters;
+
+    const selected = petSitters.find(
+      (petSitter) => petSitter.id === selectedPetSitter.id,
+    );
+
+    const remaining = petSitters.filter(
+      (petSitter) => petSitter.id !== selectedPetSitter.id,
+    );
+
+    return selected ? [selected, ...remaining] : petSitters;
+  }, [petSitters, selectedPetSitter]);
+
   return (
     <section className="bg-slate-100 py-20">
       <div className="mx-auto max-w-7xl px-6">
@@ -60,29 +80,27 @@ function NearbyList() {
 
         {!isLoading && !isError && petSitters.length > 0 && (
           <div className="h-[700px] space-y-4 overflow-y-auto pr-2">
-            {petSitters.map((petSitter) => (
+            {sortedPetSitters.map((petSitter) => (
               <div
+                key={petSitter.id}
                 ref={(element) => {
                   if (element) {
                     cardRefs.current[petSitter.id] = element;
                   }
                 }}
-                key={petSitter.id}
                 onClick={() => setSelectedPetSitter(petSitter)}
-                className={`
-cursor-pointer
-rounded-xl
-border
-transition-all
-duration-200
-
-${
-  selectedPetSitter?.id === petSitter.id
-    ? "border-blue-600 bg-blue-50 shadow-lg"
-    : "border-slate-200 hover:border-blue-300 hover:shadow-md"
-}
-`}
+                className={`cursor-pointer overflow-hidden rounded-xl border transition-all duration-300 ${
+                  selectedPetSitter?.id === petSitter.id
+                    ? "border-blue-600 bg-blue-50 shadow-xl ring-2 ring-blue-400"
+                    : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-md"
+                }`}
               >
+                {selectedPetSitter?.id === petSitter.id && (
+                  <div className="bg-blue-600 px-4 py-2 text-sm font-semibold text-white">
+                    ⭐ Selected Pet Sitter
+                  </div>
+                )}
+
                 <PetSitterCard petSitter={petSitter} />
               </div>
             ))}
