@@ -19,12 +19,14 @@ function useNearbyPetSitters(searchParams) {
 
   useEffect(() => {
     if (!query.data) {
+      setNearbyPetSitters([]);
+      setSelectedPetSitter(null);
       return;
     }
 
     setNearbyPetSitters(query.data);
 
-    if (!query.data.length) {
+    if (query.data.length === 0) {
       setSelectedPetSitter(null);
     }
   }, [query.data, setNearbyPetSitters, setSelectedPetSitter]);

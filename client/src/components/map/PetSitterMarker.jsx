@@ -1,35 +1,27 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "@react-google-maps/api";
 
 import { useSearch } from "../../features/search/context/SearchContext";
 
-import MapPopup from "./MapPopup";
-
-function PetSitterMarker() {
+function PetSitterMarkers() {
   const { nearbyPetSitters, setSelectedPetSitter } = useSearch();
-  if (!nearbyPetSitters.length) {
-    return null;
-  }
+
+  if (!nearbyPetSitters.length) return null;
 
   return (
     <>
       {nearbyPetSitters.map((petSitter) => (
         <Marker
           key={petSitter.id}
-          position={[
-            petSitter.location.coordinates[1],
-            petSitter.location.coordinates[0],
-          ]}
-          eventHandlers={{
-            click: () => setSelectedPetSitter(petSitter),
+          position={{
+            lat: petSitter.location.coordinates[1],
+            lng: petSitter.location.coordinates[0],
           }}
-        >
-          <Popup>
-            <MapPopup petSitter={petSitter} />
-          </Popup>
-        </Marker>
+          title={petSitter.name}
+          onClick={() => setSelectedPetSitter(petSitter)}
+        />
       ))}
     </>
   );
 }
 
-export default PetSitterMarker;
+export default PetSitterMarkers;

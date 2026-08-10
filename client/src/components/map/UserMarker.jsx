@@ -1,17 +1,19 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "@react-google-maps/api";
+
 import { useSearch } from "../../features/search/context/SearchContext";
 
 function UserMarker() {
   const { coordinates } = useSearch();
-
-  if (!coordinates) {
-    return null;
-  }
+  if (!coordinates) return null;
 
   return (
-    <Marker position={[coordinates.latitude, coordinates.longitude]}>
-      <Popup>📍 You are here</Popup>
-    </Marker>
+    <Marker
+      position={{
+        lat: coordinates.latitude,
+        lng: coordinates.longitude,
+      }}
+      title="Your Location"
+    />
   );
 }
 
