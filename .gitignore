@@ -1,6 +1,37 @@
+# Node.js
 node_modules/
-.env
 dist/
+
+# Environment / secrets
+.env
+.env.*
+
+# Uploads
 uploads/
+
+# Logs
 *.log
+
+# OS
 .DS_Store
+Thumbs.db
+
+# .NET
+**/bin/
+**/obj/
+
+# Visual Studio
+.vs/
+
+# Visual Studio user files
+*.user
+*.suo
+
+# JetBrains / Rider
+.idea/
+
+# Test results
+TestResults/
+
+# NuGet packages
+*.nupkg
