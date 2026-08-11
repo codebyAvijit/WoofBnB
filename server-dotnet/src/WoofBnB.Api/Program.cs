@@ -1,7 +1,10 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using WoofBnB.Application.PetSitters.Validators;
 using WoofBnB.Infrastructure.Persistence;
 using WoofBnB.Application.PetSitters;
 using WoofBnB.Infrastructure.Repositories;
+using WoofBnB.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,12 +30,16 @@ builder.Services.AddScoped<IPetSitterRepository, PetSitterRepository>();
 
 builder.Services.AddScoped<IPetSitterService, PetSitterService>();
 
+
 // Health Checks
 
 builder.Services.AddHealthChecks()
     .AddSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")!
     );
+
+    builder.Services.AddValidatorsFromAssemblyContaining<
+    CreatePetSitterRequestValidator>();
 
 var app = builder.Build();
 
@@ -49,6 +56,8 @@ if (app.Environment.IsDevelopment())
 
 // HTTPS
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // API Controllers
 app.MapControllers();
