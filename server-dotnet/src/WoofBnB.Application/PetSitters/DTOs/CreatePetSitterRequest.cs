@@ -1,9 +1,7 @@
-namespace WoofBnB.Domain.Entities;
+namespace WoofBnB.Application.PetSitters.DTOs;
 
-public class PetSitter
+public class CreatePetSitterRequest
 {
-    public int Id { get; set; }
-
     public string Name { get; set; } = string.Empty;
 
     public string Email { get; set; } = string.Empty;
@@ -22,11 +20,7 @@ public class PetSitter
 
     public string WorkingHoursEnd { get; set; } = string.Empty;
 
-    public List<string> Amenities { get; set; } = new();
+    public List<string> Amenities { get; set; } = [];
 
     public string? ProfileImage { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
 }
