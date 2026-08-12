@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/WoofBnB.Api/WoofBnB.Api.csproj" />
+    <Project Path="src/WoofBnB.Application/WoofBnB.Application.csproj" />
+    <Project Path="src/WoofBnB.Domain/WoofBnB.Domain.csproj" />
+    <Project Path="src/WoofBnB.Infrastructure/WoofBnB.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WoofBnB.IntegrationTests/WoofBnB.IntegrationTests.csproj" />
+    <Project Path="tests/WoofBnB.UnitTests/WoofBnB.UnitTests.csproj" />
+  </Folder>
+</Solution>
