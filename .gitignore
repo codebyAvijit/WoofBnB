@@ -6,6 +6,12 @@ dist/
 .env
 .env.*
 
+# Production configuration is supplied by environment variables / a secret store, never
+# committed. Ignored pre-emptively so a future appsettings.Production.json holding a real
+# connection string or JWT secret cannot be added by accident.
+appsettings.Production.json
+appsettings.*.Production.json
+
 # Uploads
 uploads/
 

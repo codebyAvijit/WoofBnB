@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WoofBnB.Application.Auth;
 using WoofBnB.Application.Auth.DTOs;
 using WoofBnB.Application.Common;
@@ -21,6 +22,7 @@ public sealed class AuthController : ControllerBase
         _responseFactory = responseFactory;
     }
 
+    [EnableRateLimiting(RateLimitPolicies.Login)]
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<LoginResultDto>>> Login([FromBody] LoginRequest request)
     {

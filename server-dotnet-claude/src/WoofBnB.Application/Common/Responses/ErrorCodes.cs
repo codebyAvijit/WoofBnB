@@ -15,4 +15,7 @@ public static class ErrorCodes
     public const string Forbidden = "FORBIDDEN";
     public const string BadRequest = "BAD_REQUEST";
     public const string InternalServerError = "INTERNAL_SERVER_ERROR";
+
+    // Emitted only by the login rate limiter. No existing endpoint's error code changes.
+    public const string TooManyRequests = "TOO_MANY_REQUESTS";
 }

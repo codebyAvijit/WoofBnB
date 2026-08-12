@@ -42,8 +42,16 @@ public class PetSitterRepository : IPetSitterRepository
         return petSitter;
     }
 
+    // AsNoTracking on the two list queries only: both are read-only projections straight to
+    // DTOs, so the change tracker's identity-resolution and snapshot work is pure overhead
+    // on every returned row and its included amenities. Deliberately NOT applied to
+    // GetByEmailAsync above — nor to either UserRepository method — because those return
+    // entities that callers mutate and persist (AuthService updates LastLogin on the tracked
+    // User it gets back from GetByEmailAsync); detaching them would silently drop the write
+    // with no exception and no failing test.
     public Task<List<PetSitter>> GetAllAsync() =>
         _context.PetSitters
+            .AsNoTracking()
             .Include(x => x.Amenities.OrderBy(a => a.SortOrder))
             .OrderByDescending(x => x.CreatedAt)
             .ToListAsync();
@@ -53,6 +61,7 @@ public class PetSitterRepository : IPetSitterRepository
         var origin = new Point(longitude, latitude) { SRID = 4326 };
 
         return _context.PetSitters
+            .AsNoTracking()
             .Include(x => x.Amenities.OrderBy(a => a.SortOrder))
             .Where(x => x.Location.Distance(origin) <= radiusInMeters)
             .OrderBy(x => x.Location.Distance(origin))

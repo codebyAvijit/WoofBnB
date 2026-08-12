@@ -17,5 +17,10 @@ public static class HttpStatusCodes
     public const int Conflict = 409;
     public const int UnprocessableEntity = 422;
 
+    // Not present in server/src/constants/httpStatus.js — Node has no rate limiting. Added
+    // for the login rate limiter, which is a deliberate production-hardening addition on an
+    // endpoint Node leaves unprotected, not a change to any existing response.
+    public const int TooManyRequests = 429;
+
     public const int InternalServerError = 500;
 }

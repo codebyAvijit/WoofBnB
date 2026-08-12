@@ -1,0 +1,16 @@
+<Project>
+
+  <!--
+    Solution-wide build settings. The solution already built with 0 warnings before this
+    file existed; TreatWarningsAsErrors locks that in so a future warning fails the build
+    instead of accumulating silently.
+
+    EnforceCodeStyleInBuild is deliberately NOT enabled: it would surface IDE-analyzer
+    style diagnostics across the existing codebase as build errors, which is a formatting
+    change, not production hardening, and is out of scope for this phase.
+  -->
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+</Project>
