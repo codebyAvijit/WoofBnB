@@ -1,0 +1,15 @@
+{
+  "name": "woofbnb-parity-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Phase 8 differential API parity harness: Node.js backend vs ASP.NET Core backend. Not part of either application; standalone tooling only.",
+  "scripts": {
+    "parity": "node run-parity.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "mongodb": "^7.5.0",
+    "mongodb-memory-server": "^11.2.0"
+  }
+}
