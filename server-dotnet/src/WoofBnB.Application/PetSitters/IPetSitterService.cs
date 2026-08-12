@@ -9,6 +9,9 @@ public interface IPetSitterService
 
     Task<List<PetSitterDto>> GetAllAsync();
 
+    Task<PetSitterDto> GetByIdAsync(
+        int id);
+
     Task<List<PetSitterDto>> GetNearbyAsync(
         double latitude,
         double longitude,

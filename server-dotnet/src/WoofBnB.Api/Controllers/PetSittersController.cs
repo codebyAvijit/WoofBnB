@@ -1,4 +1,3 @@
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using WoofBnB.Application.Common.Responses;
 using WoofBnB.Application.PetSitters;
@@ -11,20 +10,18 @@ namespace WoofBnB.Api.Controllers;
 public class PetSittersController : ControllerBase
 {
     private readonly IPetSitterService _service;
-    private readonly IValidator<CreatePetSitterRequest> _validator;
 
     public PetSittersController(
-        IPetSitterService service,
-        IValidator<CreatePetSitterRequest> validator)
+        IPetSitterService service)
     {
         _service = service;
-        _validator = validator;
     }
 
     [HttpGet]
     public async Task<ActionResult<ApiResponse<List<PetSitterDto>>>> GetAll()
     {
-        var petSitters = await _service.GetAllAsync();
+        var petSitters =
+            await _service.GetAllAsync();
 
         return Ok(
             ApiResponse<List<PetSitterDto>>.Ok(
@@ -32,31 +29,28 @@ public class PetSittersController : ControllerBase
                 petSitters));
     }
 
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<ApiResponse<PetSitterDto>>> GetById(
+        int id)
+    {
+        var petSitter =
+            await _service.GetByIdAsync(id);
+
+        return Ok(
+            ApiResponse<PetSitterDto>.Ok(
+                "Pet sitter fetched successfully",
+                petSitter));
+    }
+
     [HttpPost]
     public async Task<ActionResult<ApiResponse<PetSitterDto>>> Create(
         [FromBody] CreatePetSitterRequest request)
     {
-        var validationResult =
-            await _validator.ValidateAsync(request);
-
-        if (!validationResult.IsValid)
-        {
-            var errors = validationResult.Errors
-                .Select(error => error.ErrorMessage)
-                .ToList();
-
-            return BadRequest(
-                ApiResponse<List<string>>.Fail(
-                    "Validation failed",
-                    "VALIDATION_ERROR"));
-        }
-
         var petSitter =
             await _service.RegisterAsync(request);
 
-        return CreatedAtAction(
-            nameof(GetAll),
-            null,
+        return StatusCode(
+            StatusCodes.Status201Created,
             ApiResponse<PetSitterDto>.Ok(
                 "Pet sitter registered successfully",
                 petSitter));

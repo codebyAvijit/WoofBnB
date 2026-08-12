@@ -1,3 +1,4 @@
+using WoofBnB.Application.Common.Exceptions;
 using WoofBnB.Application.PetSitters.DTOs;
 using WoofBnB.Application.PetSitters.Mappers;
 using WoofBnB.Domain.Entities;
@@ -23,7 +24,7 @@ public class PetSitterService : IPetSitterService
 
         if (existingPetSitter is not null)
         {
-            throw new InvalidOperationException(
+            throw AppException.Conflict(
                 "A pet sitter with this email already exists");
         }
 
@@ -52,11 +53,26 @@ public class PetSitterService : IPetSitterService
 
     public async Task<List<PetSitterDto>> GetAllAsync()
     {
-        var petSitters = await _repository.GetAllAsync();
+        var petSitters =
+            await _repository.GetAllAsync();
 
         return petSitters
             .Select(PetSitterMapper.ToDto)
             .ToList();
+    }
+
+    public async Task<PetSitterDto> GetByIdAsync(int id)
+    {
+        var petSitter =
+            await _repository.GetByIdAsync(id);
+
+        if (petSitter is null)
+        {
+            throw AppException.NotFound(
+                "Pet sitter not found");
+        }
+
+        return PetSitterMapper.ToDto(petSitter);
     }
 
     public async Task<List<PetSitterDto>> GetNearbyAsync(
