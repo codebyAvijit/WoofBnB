@@ -9,4 +9,7 @@
     <Project Path="tests/WoofBnB.IntegrationTests/WoofBnB.IntegrationTests.csproj" />
     <Project Path="tests/WoofBnB.UnitTests/WoofBnB.UnitTests.csproj" />
   </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/WoofBnB.SeedAdmin/WoofBnB.SeedAdmin.csproj" />
+  </Folder>
 </Solution>

@@ -50,53 +50,23 @@ public sealed class ExceptionHandlingMiddleware
         {
             _logger.LogWarning(ex, "Application exception occurred.");
 
-            await WriteErrorResponseAsync(context, ex.StatusCode, ex.Message, ex.ErrorCode, ex.Errors, ex);
+            await ApiErrorResponseWriter.WriteAsync(
+                context, ex.StatusCode, ex.Message, ex.ErrorCode, ex.Errors, _clock, _jsonOptions, _environment, ex);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unhandled exception occurred.");
 
-            await WriteErrorResponseAsync(
+            await ApiErrorResponseWriter.WriteAsync(
                 context,
                 HttpStatusCodes.InternalServerError,
                 "An unexpected error occurred.",
                 ErrorCodes.InternalServerError,
                 errors: null,
+                _clock,
+                _jsonOptions,
+                _environment,
                 ex);
         }
-    }
-
-    private async Task WriteErrorResponseAsync(
-        HttpContext context,
-        int statusCode,
-        string message,
-        string errorCode,
-        IReadOnlyList<ValidationErrorItem>? errors,
-        Exception exception)
-    {
-        if (context.Response.HasStarted)
-        {
-            _logger.LogWarning(
-                "Response already started; cannot write error envelope for {ExceptionType}.",
-                exception.GetType().Name);
-
-            return;
-        }
-
-        context.Response.Clear();
-        context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/json";
-
-        var response = new ApiErrorResponse
-        {
-            StatusCode = statusCode,
-            Message = message,
-            Errors = errors,
-            Timestamp = _clock.UtcNow,
-            ErrorCode = errorCode,
-            Stack = _environment.IsDevelopment() ? exception.ToString() : null,
-        };
-
-        await context.Response.WriteAsync(JsonSerializer.Serialize(response, _jsonOptions));
     }
 }
