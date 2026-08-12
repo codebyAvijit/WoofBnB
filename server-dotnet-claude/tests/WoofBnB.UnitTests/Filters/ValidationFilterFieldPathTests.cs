@@ -13,6 +13,8 @@ public class ValidationFilterFieldPathTests
     [InlineData("Email", "email")]
     [InlineData("Location.Coordinates", "location.coordinates")]
     [InlineData("WorkingHours.Start", "workingHours.start")]
+    [InlineData("Amenities[0]", "amenities.0")]
+    [InlineData("Amenities[12]", "amenities.12")]
     [InlineData("", "")]
     public void ToFieldPath_LowercasesFirstLetterOfEachSegment(string propertyName, string expected)
     {

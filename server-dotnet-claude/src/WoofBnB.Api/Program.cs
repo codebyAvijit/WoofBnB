@@ -15,6 +15,7 @@ using WoofBnB.Application.Auth;
 using WoofBnB.Application.Common;
 using WoofBnB.Application.Common.Abstractions;
 using WoofBnB.Application.Common.Responses;
+using WoofBnB.Application.PetSitters;
 using WoofBnB.Infrastructure.Persistence;
 using WoofBnB.Infrastructure.Repositories;
 using WoofBnB.Infrastructure.Security;
@@ -73,6 +74,9 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
+
+builder.Services.AddScoped<IPetSitterRepository, PetSitterRepository>();
+builder.Services.AddScoped<IPetSitterService, PetSitterService>();
 builder.Services.AddSingleton<IPasswordHasher>(_ =>
     new BCryptPasswordHasher(builder.Configuration.GetValue("Security:BcryptWorkFactor", 10)));
 

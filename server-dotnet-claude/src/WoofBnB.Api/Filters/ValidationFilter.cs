@@ -68,9 +68,10 @@ public sealed class ValidationFilter : IAsyncActionFilter
     /// FluentValidation reports PascalCase paths (e.g. "Location.Coordinates"); Zod's
     /// issue.path.join(".") produces camelCase (e.g. "location.coordinates"). Lowercasing
     /// the first character of each dot-separated segment reproduces that for plain nested
-    /// properties. NOTE: this does not yet handle FluentValidation's "Amenities[0]" indexed
-    /// syntax for RuleForEach — revisit when Phase 5 adds the first array validator, since
-    /// Zod's equivalent path is "amenities.0", not "amenities[0]".
+    /// properties. RuleForEach's indexed syntax ("Amenities[0]") is converted to Zod's
+    /// dot-index equivalent ("amenities.0") by turning "[" into "." and dropping "]"
+    /// before the per-segment lowercasing runs (added in the PetSitter phase, the first
+    /// array validator in the codebase).
     /// </summary>
     internal static string ToFieldPath(string propertyName)
     {
@@ -78,6 +79,8 @@ public sealed class ValidationFilter : IAsyncActionFilter
         {
             return string.Empty;
         }
+
+        propertyName = propertyName.Replace("[", ".").Replace("]", "");
 
         var segments = propertyName.Split('.');
 
