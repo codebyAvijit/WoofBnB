@@ -28,15 +28,16 @@ public class NearbyPetSitterQueryValidatorTests
     }
 
     [Fact]
-    public void Validate_MissingLat_FailsWithSameMessageAsOutOfRange()
+    public void Validate_MissingLat_FailsWithZodsTypeStageMessage_NotTheRangeMessage()
     {
-        // Node's z.coerce.number() on an undefined lat produces NaN, which fails the
-        // same min/max comparison an out-of-range value would — there is no separate
-        // "required" message for a missing lat/lng.
+        // Confirmed by a live differential run (parity-tests/PARITY_REPORT.md): Zod's
+        // z.coerce.number() fails a MISSING lat at the type/coercion stage with its own
+        // default message, before .min()/.max() ever run — it is NOT the same message an
+        // out-of-range value gets.
         var result = _validator.Validate(new NearbyPetSitterQuery { Lat = null, Lng = 77.209 });
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Lat" && e.ErrorMessage == "Latitude must be between -90 and 90");
+        Assert.Contains(result.Errors, e => e.PropertyName == "Lat" && e.ErrorMessage == "Invalid input: expected number, received NaN");
     }
 
     [Theory]
@@ -51,12 +52,12 @@ public class NearbyPetSitterQueryValidatorTests
     }
 
     [Fact]
-    public void Validate_MissingLng_FailsWithSameMessageAsOutOfRange()
+    public void Validate_MissingLng_FailsWithZodsTypeStageMessage_NotTheRangeMessage()
     {
         var result = _validator.Validate(new NearbyPetSitterQuery { Lat = 28.6139, Lng = null });
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Lng" && e.ErrorMessage == "Longitude must be between -180 and 180");
+        Assert.Contains(result.Errors, e => e.PropertyName == "Lng" && e.ErrorMessage == "Invalid input: expected number, received NaN");
     }
 
     [Theory]

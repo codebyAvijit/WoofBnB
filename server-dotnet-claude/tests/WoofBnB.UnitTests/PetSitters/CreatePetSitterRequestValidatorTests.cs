@@ -231,18 +231,6 @@ public class CreatePetSitterRequestValidatorTests
     }
 
     [Fact]
-    public void Validate_MissingAmenitiesKey_FailsOnAmenitiesField()
-    {
-        var request = ValidRequest();
-        request.Amenities = null;
-
-        var result = _validator.Validate(request);
-
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => e.PropertyName == "Amenities");
-    }
-
-    [Fact]
     public void Validate_UnknownAmenity_FailsWithNodesExactMessage_AndIndexedFieldPath()
     {
         var request = ValidRequest();
@@ -252,6 +240,74 @@ public class CreatePetSitterRequestValidatorTests
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e =>
-            e.PropertyName == "Amenities[1]" && e.ErrorMessage == "Invalid pet sitter amenity");
+            e.PropertyName == "Amenities[1]" &&
+            e.ErrorMessage ==
+                "Invalid option: expected one of \"Dog Walking\"|\"Medication\"|\"24x7 Care\"|\"Training\"|" +
+                "\"Vet Nearby\"|\"Indoor Stay\"|\"Outdoor Play\"|\"CCTV\"|\"Pickup Drop\"|\"Large Yard\"|" +
+                "\"Small Pets\"|\"Cats\"|\"Dogs\"|\"Birds\"");
+    }
+
+    [Fact]
+    public void Validate_MissingAmenitiesKey_FailsWithNodesExactMessage()
+    {
+        var request = ValidRequest();
+        request.Amenities = null;
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e =>
+            e.PropertyName == "Amenities" && e.ErrorMessage == "Invalid input: expected array, received undefined");
+    }
+
+    [Fact]
+    public void Validate_NameTooShort_FailsWithNodesExactMessage()
+    {
+        var request = ValidRequest();
+        request.Name = "J";
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e =>
+            e.PropertyName == "Name" && e.ErrorMessage == "Too small: expected string to have >=2 characters");
+    }
+
+    [Fact]
+    public void Validate_InvalidEmail_FailsWithNodesExactMessage()
+    {
+        var request = ValidRequest();
+        request.Email = "not-an-email";
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => e.PropertyName == "Email" && e.ErrorMessage == "Invalid email address");
+    }
+
+    [Fact]
+    public void Validate_BioTooShort_FailsWithNodesExactMessage()
+    {
+        var request = ValidRequest();
+        request.Bio = "too short";
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e =>
+            e.PropertyName == "Bio" && e.ErrorMessage == "Too small: expected string to have >=20 characters");
+    }
+
+    [Fact]
+    public void Validate_AddressTooShort_FailsWithNodesExactMessage()
+    {
+        var request = ValidRequest();
+        request.Address = "abcd";
+
+        var result = _validator.Validate(request);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e =>
+            e.PropertyName == "Address" && e.ErrorMessage == "Too small: expected string to have >=5 characters");
     }
 }

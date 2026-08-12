@@ -234,7 +234,10 @@ public class PetSitterEndpointsTests : IAsyncLifetime
 
         Assert.Contains(errors, e =>
             e.GetProperty("field").GetString() == "amenities.1" &&
-            e.GetProperty("message").GetString() == "Invalid pet sitter amenity");
+            e.GetProperty("message").GetString() ==
+                "Invalid option: expected one of \"Dog Walking\"|\"Medication\"|\"24x7 Care\"|\"Training\"|" +
+                "\"Vet Nearby\"|\"Indoor Stay\"|\"Outdoor Play\"|\"CCTV\"|\"Pickup Drop\"|\"Large Yard\"|" +
+                "\"Small Pets\"|\"Cats\"|\"Dogs\"|\"Birds\"");
     }
 
     [Fact]
@@ -365,11 +368,24 @@ public class PetSitterEndpointsTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Nearby_MissingLatAndLng_Returns400()
+    public async Task Nearby_MissingLatAndLng_Returns400WithNodesMissingKeyMessage_NotTheRangeMessage()
     {
+        // Confirmed by a live differential run (parity-tests/PARITY_REPORT.md): a wholly
+        // missing lat/lng gets a different message than an out-of-range one (see
+        // Nearby_InvalidQueryParameters_Returns400WithNodesExactMessage above).
         var response = await _client.GetAsync("/api/petsitters/nearby");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var body = await response.Content.ReadFromJsonAsync<JsonDocument>();
+        var errors = body!.RootElement.GetProperty("errors").EnumerateArray().ToList();
+
+        Assert.Contains(errors, e =>
+            e.GetProperty("field").GetString() == "lat" &&
+            e.GetProperty("message").GetString() == "Invalid input: expected number, received NaN");
+        Assert.Contains(errors, e =>
+            e.GetProperty("field").GetString() == "lng" &&
+            e.GetProperty("message").GetString() == "Invalid input: expected number, received NaN");
     }
 
     [Fact]

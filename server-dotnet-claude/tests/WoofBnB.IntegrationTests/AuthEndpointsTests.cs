@@ -223,6 +223,29 @@ public class AuthEndpointsTests : IAsyncLifetime
             e.GetProperty("message").GetString() == "Password must be at least 8 characters");
     }
 
+    [Fact]
+    public async Task Login_EmptyBody_ReturnsValidationError_WithNodesMissingKeyMessage_OnBothFields()
+    {
+        // Confirmed by a live differential run (parity-tests/PARITY_REPORT.md): a wholly
+        // missing email/password key gets a different message than a present-but-invalid
+        // one (see Login_InvalidEmailFormat_ReturnsValidationError_OnEmailField above) —
+        // this exercises that distinction through the real model binder, not just the
+        // validator class directly.
+        var response = await _client.PostAsJsonAsync("/api/auth/login", new { });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var body = await response.Content.ReadFromJsonAsync<JsonDocument>();
+        var errors = body!.RootElement.GetProperty("errors").EnumerateArray().ToList();
+
+        Assert.Contains(errors, e =>
+            e.GetProperty("field").GetString() == "email" &&
+            e.GetProperty("message").GetString() == "Invalid input: expected string, received undefined");
+        Assert.Contains(errors, e =>
+            e.GetProperty("field").GetString() == "password" &&
+            e.GetProperty("message").GetString() == "Invalid input: expected string, received undefined");
+    }
+
     // ---------------------------------------------------------------- GetCurrentUser (/me)
 
     [Fact]

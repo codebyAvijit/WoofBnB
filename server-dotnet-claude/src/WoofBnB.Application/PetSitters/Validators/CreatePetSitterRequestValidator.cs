@@ -7,6 +7,17 @@ namespace WoofBnB.Application.PetSitters.Validators;
 /// <summary>
 /// Mirrors server/src/modules/petsitter/petsitter.validation.js:createPetSitterSchema.
 ///
+/// Message text for Name/Email/Bio/Address/Amenities is pinned to Node's actual Zod v4
+/// default wording (captured verbatim from a live differential run against the real
+/// Node backend — see parity-tests/PARITY_REPORT.md — not guessed from the Zod docs).
+/// Neither Node's schema nor this validator gave these rules a custom message before
+/// Phase 8's parity harness found that both sides were silently falling back to their
+/// own library's default text, which never matched. Only the specific failure mode each
+/// scenario actually exercised is pinned here — e.g. Name's WithMessage covers the
+/// MinimumLength(2) failure only (the tested "too short" case), not MaximumLength(50)
+/// (never exercised by the parity suite, left as FluentValidation's own default,
+/// per the fix's narrow scope).
+///
 /// Two additions beyond strict Node parity, both already called for in the approved
 /// migration plan rather than invented here:
 ///   - Location.Coordinates range-checked to [-90,90]/[-180,180] (decision D-5). Node
@@ -29,10 +40,12 @@ public class CreatePetSitterRequestValidator : AbstractValidator<CreatePetSitter
         RuleFor(x => x.Name)
             .NotEmpty()
             .MinimumLength(2)
+                .WithMessage("Too small: expected string to have >=2 characters")
             .MaximumLength(50);
 
         RuleFor(x => x.Email)
-            .EmailAddress();
+            .EmailAddress()
+                .WithMessage("Invalid email address");
 
         RuleFor(x => x.Phone)
             .Matches(PhoneRegex)
@@ -40,10 +53,12 @@ public class CreatePetSitterRequestValidator : AbstractValidator<CreatePetSitter
 
         RuleFor(x => x.Bio)
             .MinimumLength(20)
+                .WithMessage("Too small: expected string to have >=20 characters")
             .MaximumLength(1000);
 
         RuleFor(x => x.Address)
             .MinimumLength(5)
+                .WithMessage("Too small: expected string to have >=5 characters")
             .MaximumLength(500);
 
         RuleFor(x => x.Location)
@@ -101,11 +116,13 @@ public class CreatePetSitterRequestValidator : AbstractValidator<CreatePetSitter
 
         RuleFor(x => x.Amenities)
             .NotNull()
-            .WithMessage("Amenities is required");
+            .WithMessage("Invalid input: expected array, received undefined");
 
         RuleForEach(x => x.Amenities)
             .Must(amenity => PetSitterAmenities.All.Contains(amenity))
-            .WithMessage("Invalid pet sitter amenity")
+            .WithMessage(
+                "Invalid option: expected one of " +
+                string.Join("|", PetSitterAmenities.All.Select(a => $"\"{a}\"")))
             .When(x => x.Amenities is not null);
 
         RuleFor(x => x.ProfileImage)

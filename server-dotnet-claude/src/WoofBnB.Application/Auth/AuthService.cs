@@ -31,7 +31,12 @@ public class AuthService : IAuthService
         // login lookup never lowercases the incoming value before querying, so a
         // mixed-case email fails to match an existing admin (decision D-7 — fixed here,
         // strictly more permissive, no one loses access).
-        var email = request.Email.Trim().ToLowerInvariant();
+        //
+        // Null-forgiving: ValidationFilter has already rejected a null Email before this
+        // service method ever runs (LoginRequestValidator's NotNull rule), the same
+        // guarantee PetSitterService relies on for CreatePetSitterRequest's nullable
+        // Location/WorkingHours/Amenities.
+        var email = request.Email!.Trim().ToLowerInvariant();
 
         var user = await _userRepository.GetByEmailAsync(email);
 
@@ -48,7 +53,7 @@ public class AuthService : IAuthService
             throw AppException.Forbidden("Your account has been disabled");
         }
 
-        if (!_passwordHasher.Verify(request.Password, user.PasswordHash))
+        if (!_passwordHasher.Verify(request.Password!, user.PasswordHash))
         {
             throw AppException.Unauthorized("Invalid email or password");
         }
